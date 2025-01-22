@@ -1,4 +1,4 @@
-name: Basic Test Pipeline
+name: GenAI Basic Pipeline
 
 on:
   push:
@@ -7,23 +7,31 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
+  ai-checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       
-      - name: Run Basic Check
+      # AI-powered code formatting
+      - name: AI Code Formatting
+        uses: creyD/prettier_action@v4.3
+        with:
+          prettier_options: --write **/*.{js,md}
+          commit_message: "AI-powered code formatting"
+          
+      # AI-powered code review comments
+      - name: AI Code Review
+        uses: coderabbitai/ai-pr-reviewer@latest
+        
+      # Simple checks for demo
+      - name: Pipeline Status
         run: |
-          echo "Running basic checks..."
+          echo "GenAI Pipeline completed successfully!"
           echo "Repository: ${{ github.repository }}"
           echo "Branch: ${{ github.ref }}"
-          echo "All checks passed!"
 
 
-
-
-
-# name: Simple Test Pipeline
+# name: Basic Test Pipeline
 
 # on:
 #   push:
@@ -37,18 +45,9 @@ jobs:
 #     steps:
 #       - uses: actions/checkout@v3
       
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: '18'
-          
-#       - name: Install Dependencies
-#         run: npm install
-        
-#       - name: Run Tests
-#         run: npm test
-        
-#       - name: Log Success
+#       - name: Run Basic Check
 #         run: |
-#           echo "All tests completed successfully!"
-#           echo "Branch name: ${{ github.ref }}"
+#           echo "Running basic checks..."
+#           echo "Repository: ${{ github.repository }}"
+#           echo "Branch: ${{ github.ref }}"
+#           echo "All checks passed!"
