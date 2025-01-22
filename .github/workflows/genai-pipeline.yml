@@ -4,11 +4,11 @@ name: GenAI DevOps Demo Pipeline
 #    branches:
 #      - main
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+#on:
+#  push:
+#    branches: [ master ]
+#  pull_request:
+#    branches: [ master ]
 
 jobs:
   analyze-code:
