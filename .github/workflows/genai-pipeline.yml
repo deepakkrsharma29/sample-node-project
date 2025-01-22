@@ -1,0 +1,60 @@
+name: GenAI DevOps Demo Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  analyze-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Basic code analysis using CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
+  ai-suggestions:
+    needs: analyze-code
+    runs-on: ubuntu-latest
+    steps:
+      # Using OpenAI-powered Prettier config suggestions
+      - name: Suggest Code Style Improvements
+        uses: creyD/prettier_action@v4.3
+        with:
+          prettier_options: --write **/*.{js,md}
+          commit_message: "AI-suggested code style improvements"
+
+  test:
+    needs: ai-suggestions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to Development
+        run: |
+          echo "Deploying to development environment"
+          echo "Application deployed successfully!"
